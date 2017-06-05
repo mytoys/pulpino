@@ -171,3 +171,7 @@ Take a look at the `sw/libs/Arduino_libs` subfolder for more information about t
 ---
 # Modification History
 
+## run `update-ips.py` in this way:
+```shell
+./update-ips.py https://github.com
+```
