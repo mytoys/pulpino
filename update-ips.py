@@ -55,7 +55,8 @@ def find_server():
 
 if len(sys.argv) > 1:
     server = sys.argv[1]
-    group  = "pulp-project"
+    #group  = "pulp-project"
+    group  = "pulp-platform"
     if "http" in server:
         remote = "%s/%s" % (server, group)
     else:
