@@ -1,0 +1,67 @@
+#all: ips pulpino pulpemu sw
+all: ips pulpino arty_top
+
+
+
+.PHONY: ips
+ips: clk mem
+
+
+.PHONY: clk
+clk: ips/arty_mmcm/ip/xilinx_clock_manager.dcp
+
+ips/arty_mmcm/ip/xilinx_clock_manager.dcp:
+	make -C ips/arty_mmcm/ clean all
+
+
+.PHONY: mem
+mem: ips/arty_mem_8192x32/ip/xilinx_mem_8192x32.dcp
+
+ips/arty_mem_8192x32/ip/xilinx_mem_8192x32.dcp:
+	make -C ips/arty_mem_8192x32/ clean all
+
+
+#.PHONY: mem_dp
+#mem_dp: ips/xilinx_mem_32768x32_dp_arty/ip/xilinx_mem_32768x32_dp.dcp
+#
+#ips/xilinx_mem_32768x32_dp/ip/xilinx_mem_32768x32_dp.dcp:
+#	make -C ips/xilinx_mem_32768x32_dp/ clean all
+
+
+
+.PHONY: pulpino
+pulpino: pulpino/pulpino.edf
+
+pulpino/pulpino.edf:
+	make -C pulpino clean all
+
+#.PHONY: pulpemu
+#pulpemu: pulpemu/pulpemu_top.bit
+#
+#pulpemu/pulpemu_top.bit:
+#	make -C pulpemu clean all
+
+.PHONY: arty_top 
+arty_top: arty_top/arty_top.bit
+
+arty_top/arty_top.bit:
+	make -C arty_top clean all
+
+
+
+#.PHONY: sw
+#sw:
+#	make -C sw all
+
+
+.PHONY: clean
+clean:
+	make -C ips/xilinx_clock_manager/ clean
+	make -C ips/xilinx_mem_8192x32/ clean
+	make -C ips/xilinx_mem_32768x32_dp/ clean
+	make -C pulpino clean
+	make -C pulpemu clean
+	make -C sw clean
+	make -C ips/arty_mmcm/ clean
+	make -C ips/arty_mem_8192x32/ clean
+	make -C arty_top clean

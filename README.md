@@ -175,3 +175,17 @@ Take a look at the `sw/libs/Arduino_libs` subfolder for more information about t
 ```shell
 ./update-ips.py https://github.com
 ```
+
+## run PULPino on Arty board
+
+1. Update FPGA build environment
+- Define environment variables : `XILINX_PART` and `XILINX_BOARD` by adding `fpga/common/set_board.sh`, you can put it in the end of `~/.bashrc`.
+- add new makefile `fpga/Makefile.arty` 
+- add `fpga/arty_top`: new FPGA top wrapper
+- add `fpga/ips/arty_mmcm` : handles clocks (Arty board uses 100MHz xtal)
+- add `fpga/ips/arty_mem_8192x32` : instruction memory ,keep the same name of xilinx_mem_8192x32 to avoid RTL change.
+
+2. Create new fpga top wrapper 
+- add `fpga/rtl/arty_top.v`
+
+
