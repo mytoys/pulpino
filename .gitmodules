@@ -1,0 +1,3 @@
+[submodule "fpga/rtl/uart2spi"]
+	path = fpga/rtl/uart2spi
+	url = https://github.com/mytoys/uart2spi
