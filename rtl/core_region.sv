@@ -378,6 +378,22 @@ module core_region
   //----------------------------------------------------------------------------//
   // Data RAM
   //----------------------------------------------------------------------------//
+`ifdef PULP_FPGA_EMUL
+  xilinx_dmem_8192x32
+  data_mem 
+  (
+    .clka   ( clk                    ),
+    .rsta   ( 1'b0                   ), // reset is active high
+
+    .ena    ( data_mem_en            ),
+    .addra  ( data_mem_addr>>2       ),
+    .dina   ( data_mem_wdata         ),
+    .douta  ( data_mem_rdata         ),
+    .wea    ( data_mem_be & {4{data_mem_we}}       )
+  );
+
+
+`else
   sp_ram_wrap
   #(
     .RAM_SIZE   ( DATA_RAM_SIZE  ),
@@ -395,6 +411,8 @@ module core_region
     .be_i         ( data_mem_be    ),
     .bypass_en_i  ( testmode_i     )
   );
+
+`endif
 
   axi_mem_if_SP_wrap
   #(

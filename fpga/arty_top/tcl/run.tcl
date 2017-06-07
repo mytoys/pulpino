@@ -23,7 +23,7 @@ set FPGA_RTL ../rtl
 set FPGA_PULPINO ../pulpino
 
 # create project
-create_project pulpemu . -part $::env(XILINX_PART)
+create_project arty_top . -part $::env(XILINX_PART) -force
 
 if { [info exists ::env(XILINX_BOARD) ] } {
   set_property board $::env(XILINX_BOARD) [current_project]
@@ -33,31 +33,19 @@ if { [info exists ::env(XILINX_BOARD) ] } {
 # set up meaningful errors
 source ../common/messages.tcl
 
-# create block design
-source tcl/ps7_bd.tcl
-
-# validate
-validate_bd_design
-
-# generate
-generate_target all [get_files ./pulpemu.srcs/sources_1/bd/ps7/ps7.bd]
-make_wrapper -files [get_files ./pulpemu.srcs/sources_1/bd/ps7/ps7.bd] -top
-add_files -norecurse ./pulpemu.srcs/sources_1/bd/ps7/hdl/ps7_wrapper.v
-update_compile_order -fileset sources_1
-update_compile_order -fileset sim_1
-
-# add pulpemu_top
-add_files -norecurse ../rtl/clk_rst_gen.v
-add_files -norecurse ../rtl/pulpemu_top.v
+# add arty_top
+add_files -norecurse ../rtl/arty_top.v
 update_compile_order -fileset sources_1
 update_compile_order -fileset sim_1
 
 # add pulpino
-add_files -norecurse ../pulpino/pulpino.edf \
-                     ../pulpino/pulpino_stub.v \
-                     ../ips/xilinx_clock_manager/ip/xilinx_clock_manager.dcp
+add_files -norecurse ../arty_pulpino/pulpino.edf \
+                     ../arty_pulpino/pulpino_stub.v \
+                     ../ips/arty_mmcm/ip/arty_mmcm.dcp
 
 update_compile_order -fileset sources_1
+
+add_files -fileset constrs_1 -norecurse constraints.xdc
 
 # save area
 set_property strategy Flow_AreaOptimized_High [get_runs synth_1]
@@ -68,10 +56,8 @@ synth_design -rtl -name rtl_1
 launch_runs synth_1
 wait_on_run synth_1
 open_run synth_1 -name netlist_1
-# write_edif pulpemu.edf
+# write_edif arty_top.edf
 
-# export hardware design for sdk
-write_hwdef -force -file ./pulpemu.hwdef
 
 # run implementation
-source tcl/impl.tcl
+#source tcl/impl.tcl

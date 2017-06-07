@@ -1,13 +1,15 @@
 module arty_top (
     input xtal_in, // 100MHz
-    input reset_n,  
-    input fetch_en,
+
+    input [3:0] sw,  // Switches
+    input [3:0] btn, // Buttons
+    output [3:0] led, // LEDs
 
     output uart_tx, 
-    input  uart_rx,
+    input  uart_rx
 
-    output pll_locked
 );
+
 
 // JTAG
 wire tck_i   = 1'b0; 
@@ -17,29 +19,29 @@ wire td_i    = 1'b0;
 wire td_o    ; 
 
 // SPI slave 
-wire spi_clk;
-wire spi_cs;
-wire [3:0] spi_din;
+wire spi_clk = 1'b0;
+wire spi_cs = 1'b0;
+wire [3:0] spi_din = 4'd0;
 wire [3:0] spi_dout;
 wire [1:0] spi_mode;
 
 // SPI Master
 wire spi_master_clk;
 wire [3:0] spi_master_cs_n;
-wire [3:0] spi_master_din;
+wire [3:0] spi_master_din = 4'd0;
 wire [3:0] spi_master_dout;
 wire [1:0] spi_master_mode;
 
 // I2C
-wire scl_in;
+wire scl_in = 1'b0;
 wire scl_out;
 wire scl_oen;
-wire sda_in;
+wire sda_in = 1'b0;
 wire sda_out;
 wire sda_oen;
 
 // GPIO
-wire [31:0] gpio_in;
+wire [31:0] gpio_in = 32'd0;
 wire [31:0] gpio_out;
 wire [31:0] gpio_dir;
 
@@ -49,9 +51,26 @@ wire uart_dtr;
 wire uart_cts = 1'b0;
 wire uart_dsr = 1'b0;
 
+// Switches
+wire fetch_en = sw[3]; // sw[3] : fetech enable, high active
+// wire = sw[2]; // sw[2] : 
+// wire = sw[1]; // sw[1] : 
+// wire = sw[0]; // sw[0] : 
+
+wire reset_n = ~btn[3]; // btn[3] : global hardware reset, low active
+// wire = btn[2]; // btn[2] : 
+// wire = btn[1]; // btn[1] : 
+// wire = btn[0]; // btn[0] : 
+
+// LEDs
+assign led[3] = pll_locked; // LED[3]: pll clocked
+assign led[2] = uart_tx;    // LED[2]: uart tx
+assign led[1] = 1'b0;
+assign led[0] = 1'b0;
+
+wire clk_cpu;
 
 // clk_wiz
-wire clk_cpu;
 arty_mmcm u_mmcm (
     .clk_in1  ( xtal_in     ) ,
     .clk_out1 ( clk_cpu     ) , // 50MHz

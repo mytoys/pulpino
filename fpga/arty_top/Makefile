@@ -1,28 +1,28 @@
-PROJECT:=pulpemu
+PROJECT:=arty_top
 
 all: synth
 
 synth:
 	vivado -mode batch -source tcl/run.tcl
-	cp pulpemu.runs/impl_1/pulpemu_top.bit pulpemu_top.bit
+	cp arty_top.runs/impl_1/arty_top.bit arty_top.bit
 
 impl:
 	rm -rf .Xil
 	vivado -mode batch -source tcl/impl.tcl
-	cp pulpemu_top.runs/impl_1/pulpemu_top.bit .
-	cp pulpemu_top.runs/impl_1/*.dcp .
+	cp arty_top.runs/impl_1/arty_top.bit .
+	cp arty_top.runs/impl_1/*.dcp .
 
-gui-synth:
+gui:
 	vivado -mode gui -source tcl/run.tcl &
 
 gui-impl:
 	vivado -mode gui -source tcl/impl.tcl &
 
 continue:
-	vivado -mode gui pulpemu_top.xpr
+	vivado -mode gui arty_top.xpr
 
 clean-impl:
-	rm -rf pulpemu_top*
+	rm -rf arty_top*
 
 clean:
 	rm -rf ${PROJECT}.hw
@@ -43,6 +43,6 @@ clean:
 	rm -rf xgui
 	rm -rf .Xil
 	rm -rf ps_clock*
-	rm -rf pulpemu_top*
-	rm -rf pulpemu.edf
+	rm -rf arty_top*
+	rm -rf arty_top.edf
 

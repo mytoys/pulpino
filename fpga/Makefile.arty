@@ -30,10 +30,10 @@ ips/arty_mem_8192x32/ip/xilinx_mem_8192x32.dcp:
 
 
 .PHONY: pulpino
-pulpino: pulpino/pulpino.edf
+pulpino: arty_pulpino/pulpino.edf
 
-pulpino/pulpino.edf:
-	make -C pulpino clean all
+arty_pulpino/pulpino.edf:
+	make -C arty_pulpino clean all
 
 #.PHONY: pulpemu
 #pulpemu: pulpemu/pulpemu_top.bit
@@ -56,12 +56,7 @@ arty_top/arty_top.bit:
 
 .PHONY: clean
 clean:
-	make -C ips/xilinx_clock_manager/ clean
-	make -C ips/xilinx_mem_8192x32/ clean
-	make -C ips/xilinx_mem_32768x32_dp/ clean
-	make -C pulpino clean
-	make -C pulpemu clean
-	make -C sw clean
 	make -C ips/arty_mmcm/ clean
 	make -C ips/arty_mem_8192x32/ clean
+	make -C arty_pulpino clean
 	make -C arty_top clean

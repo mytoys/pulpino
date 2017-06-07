@@ -188,4 +188,25 @@ Take a look at the `sw/libs/Arduino_libs` subfolder for more information about t
 2. Create new fpga top wrapper 
 - add `fpga/rtl/arty_top.v`
 
+### 2.1 Helloworld
+- connect UART on arty fpga top
+- rename data memory to xilinx_dmem_8192x32 in `rtl/core_region.sv`
+- generate memory init file(.coe) from rtl simulation
+- add `fpga/rtl/tb.sv` for simulation, whereas `tb/uart.sv` is reused.
 
+```shell
+#1 build helloworld apps : `sw/build/apps/helloworld/slm_files`
+    cd sw/build
+    make vcompile
+    make helloworld.vsimc
+
+#2 generate memory init file
+    cd fpga/common
+    ./gen_imem_coe.sh helloworld   -> ips/arty_mem_8192x32/xilinx_mem_8192x32.coe
+    ./gen_dmem_coe.sh helloworld   -> ips/arty_dmem_8192x32/xilinx_dmem_8192x32.coe
+    
+#3 generate bit stream
+    cd fpga
+    make -f Makefile.arty all
+
+```
