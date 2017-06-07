@@ -8,17 +8,20 @@ ips: clk mem
 
 
 .PHONY: clk
-clk: ips/arty_mmcm/ip/xilinx_clock_manager.dcp
+clk: ips/arty_mmcm/ip/arty_mmcm.dcp
 
-ips/arty_mmcm/ip/xilinx_clock_manager.dcp:
+ips/arty_mmcm/ip/arty_mmcm.dcp:
 	make -C ips/arty_mmcm/ clean all
 
 
 .PHONY: mem
-mem: ips/arty_mem_8192x32/ip/xilinx_mem_8192x32.dcp
+mem: ips/arty_mem_8192x32/ip/xilinx_mem_8192x32.dcp ips/arty_dmem_8192x32/ip/xilinx_dmem_8192x32.dcp
 
 ips/arty_mem_8192x32/ip/xilinx_mem_8192x32.dcp:
 	make -C ips/arty_mem_8192x32/ clean all
+
+ips/arty_dmem_8192x32/ip/xilinx_dmem_8192x32.dcp:
+	make -C ips/arty_dmem_8192x32/ clean all
 
 
 #.PHONY: mem_dp
@@ -58,5 +61,6 @@ arty_top/arty_top.bit:
 clean:
 	make -C ips/arty_mmcm/ clean
 	make -C ips/arty_mem_8192x32/ clean
+	make -C ips/arty_dmem_8192x32/ clean
 	make -C arty_pulpino clean
 	make -C arty_top clean

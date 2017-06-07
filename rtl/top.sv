@@ -10,6 +10,7 @@
 
 `include "axi_bus.sv"
 `include "debug_bus.sv"
+`include "config.sv"
 
 `define AXI_ADDR_WIDTH         32
 `define AXI_DATA_WIDTH         32
@@ -201,6 +202,7 @@ module pulpino_top
     .AXI_DATA_WIDTH      ( `AXI_DATA_WIDTH      ),
     .AXI_SLAVE_ID_WIDTH  ( `AXI_ID_SLAVE_WIDTH  ),
     .AXI_MASTER_ID_WIDTH ( `AXI_ID_MASTER_WIDTH ),
+    .ROM_START_ADDR      ( `ROM_START_ADDR      ),
     .AXI_USER_WIDTH      ( `AXI_USER_WIDTH      )
   )
   peripherals_i

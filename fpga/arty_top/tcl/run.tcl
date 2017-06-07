@@ -60,4 +60,4 @@ open_run synth_1 -name netlist_1
 
 
 # run implementation
-#source tcl/impl.tcl
+source tcl/impl.tcl

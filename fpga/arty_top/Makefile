@@ -6,23 +6,23 @@ synth:
 	vivado -mode batch -source tcl/run.tcl
 	cp arty_top.runs/impl_1/arty_top.bit arty_top.bit
 
-impl:
-	rm -rf .Xil
-	vivado -mode batch -source tcl/impl.tcl
-	cp arty_top.runs/impl_1/arty_top.bit .
-	cp arty_top.runs/impl_1/*.dcp .
+#impl:
+#	rm -rf .Xil
+#	vivado -mode batch -source tcl/impl.tcl
+#	cp arty_top.runs/impl_1/arty_top.bit .
+#	cp arty_top.runs/impl_1/*.dcp .
 
 gui:
 	vivado -mode gui -source tcl/run.tcl &
 
-gui-impl:
-	vivado -mode gui -source tcl/impl.tcl &
+#gui-impl:
+#	vivado -mode gui -source tcl/impl.tcl &
 
 continue:
 	vivado -mode gui arty_top.xpr
 
-clean-impl:
-	rm -rf arty_top*
+#clean-impl:
+#	rm -rf arty_top*
 
 clean:
 	rm -rf ${PROJECT}.hw
