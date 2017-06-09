@@ -34,6 +34,8 @@ if { [info exists ::env(XILINX_BOARD) ] } {
 source ../common/messages.tcl
 
 # add arty_top
+add_files -norecurse ../rtl/uart/source/uart.vhd
+add_files -norecurse ../rtl/uart_to_spi.v
 add_files -norecurse ../rtl/arty_top.v
 update_compile_order -fileset sources_1
 update_compile_order -fileset sim_1

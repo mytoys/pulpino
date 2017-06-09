@@ -19,7 +19,7 @@ gui:
 #	vivado -mode gui -source tcl/impl.tcl &
 
 continue:
-	vivado -mode gui arty_top.xpr
+	vivado -mode gui arty_top.xpr &
 
 #clean-impl:
 #	rm -rf arty_top*
