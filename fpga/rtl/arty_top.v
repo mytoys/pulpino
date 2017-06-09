@@ -19,9 +19,9 @@ wire td_i    = 1'b0;
 wire td_o    ; 
 
 // SPI slave 
-wire spi_clk = 1'b0;
-wire spi_cs = 1'b0;
-wire [3:0] spi_din = 4'd0;
+wire spi_clk;
+wire spi_cs;
+wire [3:0] spi_din;
 wire [3:0] spi_dout;
 wire [1:0] spi_mode;
 
@@ -50,6 +50,8 @@ wire uart_rts;
 wire uart_dtr;
 wire uart_cts = 1'b0;
 wire uart_dsr = 1'b0;
+wire uart_rx_core;
+wire uart_tx_core;
 
 // Switches
 wire fetch_en = sw[3]; // sw[3] : fetech enable, high active
@@ -68,9 +70,8 @@ assign led[2] = uart_tx;    // LED[2]: uart tx
 assign led[1] = 1'b0;
 assign led[0] = 1'b0;
 
-wire clk_cpu;
-
 // clk_wiz
+wire clk_cpu;
 arty_mmcm u_mmcm (
     .clk_in1  ( xtal_in     ) ,
     .clk_out1 ( clk_cpu     ) , // 50MHz
@@ -78,6 +79,34 @@ arty_mmcm u_mmcm (
     .locked   ( pll_locked  ) 
  );
   
+// UART2SPI
+wire uart2spi_rxd;
+wire uart2spi_txd;
+wire uart2spi_sck;
+wire uart2spi_so;
+wire uart2spi_si;
+wire uart2spi_cs_n;
+
+assign spi_clk      = uart2spi_sck  ; 
+assign spi_cs       = uart2spi_cs_n ; 
+assign spi_din      = {3'b000, uart2spi_so}   ; 
+assign uart2spi_si  = spi_dout[0]      ; 
+
+assign uart2spi_rxd = fetch_en ? 1'b0         : uart_rx      ;
+assign uart_tx      = fetch_en ? uart_tx_core : uart2spi_txd ;
+
+uart_to_spi u_uart_to_spi (    
+    . clk      ( clk_cpu       ) ,
+    . rst_n    ( reset_n       ) ,
+    . uart_rxd ( uart2spi_rxd  ) ,
+    . uart_txd ( uart2spi_txd  ) ,
+    
+    
+    . spi_clk  ( uart2spi_sck  ) ,
+    . spi_dout ( uart2spi_so   ) ,
+    . spi_din  ( uart2spi_si   ) ,
+    . spi_cs   ( uart2spi_cs_n ) 
+);
 
 // PULPino SoC
 pulpino u_pulpino (
@@ -130,7 +159,7 @@ pulpino u_pulpino (
     .gpio_out          ( gpio_out            ) ,
     .gpio_dir          ( gpio_dir            ) ,
 
-    .uart_tx           ( uart_tx             ) , // output
+    .uart_tx           ( uart_tx_core        ) , // output
     .uart_rx           ( uart_rx             ) , // input
     .uart_rts          ( uart_rts            ) , // output
     .uart_dtr          ( uart_dtr            ) , // output
