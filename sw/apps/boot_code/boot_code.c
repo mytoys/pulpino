@@ -22,7 +22,12 @@ const char g_numbers[] = {
 int check_spi_flash();
 void load_block(unsigned int addr, unsigned int len, int* dest);
 void uart_send_block_done(unsigned int i);
+
+#ifdef OLD_JUMP_AND_START 
 void jump_and_start(volatile int *ptr);
+#else 
+void (*jump_and_start)(void);
+#endif 
 
 int main()
 {
@@ -42,10 +47,13 @@ int main()
   /* divide sys clock by 4 */
   *(volatile int*) (SPI_REG_CLKDIV) = 0x4;
 
+#if 0
+  // N25Q128A13E : 0x20BA18
   if (check_spi_flash()) {
     uart_send("ERROR: Spansion SPI flash not found\n", 36);
     while (1);
   }
+#endif
 
 
   uart_send("Loading from SPI\n", 17);
@@ -58,7 +66,8 @@ int main()
 
   // enables QPI
   // cmd 0x71 write any register
-  spi_setup_cmd_addr(0x71, 8, 0x80000348, 32);
+  //spi_setup_cmd_addr(0x71, 8, 0x80000348, 32);
+  spi_setup_cmd_addr(0x61, 8, 0x5F, 8); /* N25Q128A13E */
   spi_set_datalen(0);
   spi_start_transaction(SPI_CMD_WR, SPI_CSN0);
   while ((spi_get_status() & 0xFFFF) != 1);
@@ -68,7 +77,7 @@ int main()
   //-----------------------------------------------------------
 
   int header_ptr[8];
-  int addr = 0;
+  int addr = 0x400000; // start from 0x400000 Bytes, 0~0x3fffff is for fpga bit file
 
   spi_setup_dummy(8, 0);
 
@@ -142,7 +151,6 @@ int main()
   // Set new boot address -> exceptions/interrupts/events rely
   // on that information
   //-----------------------------------------------------------
-
   BOOTREG = 0x00;
 
   //-----------------------------------------------------------
@@ -150,7 +158,14 @@ int main()
   //-----------------------------------------------------------
 
   //jump to program start address (instruction base address)
+#ifdef OLD_JUMP_AND_START 
+  // cause simulation hang-up, why ??
   jump_and_start((volatile int *)(INSTR_RAM_START_ADDR));
+#else
+  jump_and_start = (void(*)(void))INSTR_RAM_START_ADDR;
+  jump_and_start();
+#endif
+
 }
 
 int check_spi_flash() {
@@ -185,6 +200,7 @@ void load_block(unsigned int addr, unsigned int len, int* dest) {
   spi_read_fifo(dest, len);
 }
 
+#ifdef OLD_JUMP_AND_START
 void jump_and_start(volatile int *ptr)
 {
 #ifdef __riscv__
@@ -201,6 +217,8 @@ void jump_and_start(volatile int *ptr)
       : : "r" (ptr) );
 #endif
 }
+#endif
+
 
 void uart_send_block_done(unsigned int i) {
   unsigned int low  = i & 0xF;

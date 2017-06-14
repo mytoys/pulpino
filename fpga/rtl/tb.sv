@@ -7,10 +7,6 @@ logic clk;
 logic reset;
 logic fetch_en;
 
-//initial begin
-//    $display("memory initialazation");
-//    $readmemh("/home/fdi/halley/mysoc/fpga/arty_pulpino/mem.txt", tb.DUT.u_pulpino.pulpino_i.core_region_i.instr_mem.sp_ram_wrap_i.sp_ram_i.mem);
-//end
 
 initial begin
     clk = 1'b0;
@@ -18,8 +14,10 @@ initial begin
     fetch_en = 1'b0;
     #150
     reset = 1'b0;
-    //#10000
-    //fetch_en = 1'b1;
+    #10000
+    fetch_en = 1'b1;
+    // sim_uart_load_data;
+    
 end
 
 always #5 clk = ~clk;
@@ -44,16 +42,37 @@ assign btn[0] = 1'b0;
 
 assign pll_locked = led[3];
 
+wire qspi_clk;
+wire       qspi_cs_n;
+wire [3:0] qspi_dq;
+
 arty_top u_DUT (
     .xtal_in ( clk     ) ,
     .led     ( led     ) ,
     .sw      ( sw      ) ,
     .btn     ( btn     ) ,
+    .qspi_clk( qspi_clk) ,
+    .qspi_cs_n( qspi_cs_n) ,
+    .qspi_dq( qspi_dq) ,
     .uart_rx ( uart_rx ) ,
     .uart_tx ( uart_tx ) 
 );
 
- parameter  BAUDRATE      = 115200; // 19200; //1562500; // 781250; // 1562500
+N25Qxxx #(
+    .memory_file ( "helloworld.vmf")
+) u_N25Q128A13E (
+    .S         ( qspi_cs_n    ) ,
+    .C_        ( qspi_clk     ) ,
+    .HOLD_DQ3  ( qspi_dq[3] ) ,
+    .Vpp_W_DQ2 ( qspi_dq[2] ) ,
+    .DQ1       ( qspi_dq[1] ) ,
+    .DQ0       ( qspi_dq[0] ) ,
+    .Vcc       ( 32'hffffffff ) 
+);
+
+
+ parameter  BAUDRATE      = 1562500; // 19200; //1562500; // 781250; // 1562500
+ //parameter  BAUDRATE      = 115200; // 19200; //1562500; // 781250; // 1562500
   // use 8N1
   uart_bus
   #(
@@ -115,7 +134,7 @@ logic                 more_stim = 1;
     
   task spi_load;
     begin
-      $readmemh("/home/fdi/halley/mysoc/sw/build/apps/helloworld/slm_files/spi_stim.txt", stimuli);  // read in the stimuli vectors  == address_value
+      $readmemh("../../../../sw/build/apps/helloworld/slm_files/spi_stim.txt", stimuli);  // read in the stimuli vectors  == address_value
     
       spi_addr        = stimuli[num_stim][63:32]; // assign address
       spi_data        = stimuli[num_stim][31:0];  // assign data
@@ -156,7 +175,8 @@ logic                 more_stim = 1;
   endtask
 
 
-initial begin
+task sim_uart_load_data;
+begin
     #100;
     wait(reset==1'b0);
     
@@ -168,7 +188,7 @@ initial begin
     #1000_000_000;
     $stop;
 end
-    
+endtask     
 
 
 endmodule

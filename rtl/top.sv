@@ -45,6 +45,7 @@ module pulpino_top
 
     //SPI Master
     output logic              spi_master_clk_o,
+    output logic      [3:0]   spi_master_oen_o,
     output logic              spi_master_csn0_o,
     output logic              spi_master_csn1_o,
     output logic              spi_master_csn2_o,
@@ -236,6 +237,7 @@ module pulpino_top
     .uart_dsr        ( uart_dsr          ),
 
     .spi_master_clk  ( spi_master_clk_o  ),
+    .spi_master_oen  ( spi_master_oen_o  ),
     .spi_master_csn0 ( spi_master_csn0_o ),
     .spi_master_csn1 ( spi_master_csn1_o ),
     .spi_master_csn2 ( spi_master_csn2_o ),

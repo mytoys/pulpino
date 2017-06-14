@@ -27,6 +27,7 @@ module pulpino(
   spi_sdi3_i,
 
   spi_master_clk_o,
+  spi_master_oen_o,
   spi_master_csn0_o,
   spi_master_csn1_o,
   spi_master_csn2_o,
@@ -85,6 +86,7 @@ module pulpino(
   input         spi_sdi3_i;
 
   output        spi_master_clk_o;
+  output  [3:0] spi_master_oen_o;
   output        spi_master_csn0_o;
   output        spi_master_csn1_o;
   output        spi_master_csn2_o;
@@ -150,6 +152,7 @@ module pulpino(
     .spi_sdi3_i        ( spi_sdi3_i        ),
 
     .spi_master_clk_o  ( spi_master_clk_o  ),
+    .spi_master_oen_o  ( spi_master_oen_o  ),
     .spi_master_csn0_o ( spi_master_csn0_o ),
     .spi_master_csn1_o ( spi_master_csn1_o ),
     .spi_master_csn2_o ( spi_master_csn2_o ),

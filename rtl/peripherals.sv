@@ -54,6 +54,7 @@ module peripherals
     input  logic              uart_dsr,
 
     output logic              spi_master_clk,
+    output logic       [3:0]  spi_master_oen,
     output logic              spi_master_csn0,
     output logic              spi_master_csn1,
     output logic              spi_master_csn2,
@@ -320,6 +321,7 @@ module peripherals
     .events_o     ( s_spim_event ),
 
     .spi_clk      ( spi_master_clk  ),
+    .spi_oen      ( spi_master_oen  ),
     .spi_csn0     ( spi_master_csn0 ),
     .spi_csn1     ( spi_master_csn1 ),
     .spi_csn2     ( spi_master_csn2 ),

@@ -5,6 +5,10 @@ module arty_top (
     input [3:0] btn, // Buttons
     output [3:0] led, // LEDs
 
+    output qspi_clk,
+    output qspi_cs_n,
+    inout [3:0] qspi_dq,
+
     output uart_tx, 
     input  uart_rx
 
@@ -27,10 +31,27 @@ wire [1:0] spi_mode;
 
 // SPI Master
 wire spi_master_clk;
+wire [3:0] spi_master_oen;
 wire [3:0] spi_master_cs_n;
-wire [3:0] spi_master_din = 4'd0;
+wire [3:0] spi_master_din ;
 wire [3:0] spi_master_dout;
 wire [1:0] spi_master_mode;
+
+assign qspi_clk = spi_master_clk;
+assign qspi_cs_n = spi_master_cs_n[0];
+PULLUP qspi_pullup[3:0]
+(
+  .O(qspi_dq)
+);
+
+IOBUF qspi_iobuf[3:0]
+(
+  .IO(qspi_dq),
+  .O(spi_master_din),
+  .I(spi_master_dout),
+  .T(spi_master_oen)
+);
+
 
 // I2C
 wire scl_in = 1'b0;
@@ -110,35 +131,36 @@ uart_to_spi u_uart_to_spi (
 
 // PULPino SoC
 pulpino u_pulpino (
-    .clk               ( clk_cpu             ) ,
-    .rst_n             ( reset_n             ) ,
+    .clk               ( clk_cpu            ) ,
+    .rst_n             ( reset_n            ) ,
 
-    .fetch_enable_i    ( fetch_en            ) ,
+    .fetch_enable_i    ( fetch_en           ) ,
 
-    .tck_i             ( tck_i               ) ,
-    .trstn_i           ( trst_ni             ) ,
-    .tms_i             ( tms_i               ) ,
-    .tdi_i             ( td_i                ) ,
-    .tdo_o             ( td_o                ) ,
+    .tck_i             ( tck_i              ) ,
+    .trstn_i           ( trst_ni            ) ,
+    .tms_i             ( tms_i              ) ,
+    .tdi_i             ( td_i               ) ,
+    .tdo_o             ( td_o               ) ,
 
-    .spi_clk_i         ( spi_clk             ) ,
-    .spi_cs_i          ( spi_cs              ) ,
-    .spi_mode_o        ( spi_mode            ) ,
-    .spi_sdi0_i        ( spi_din[0]          ) ,
-    .spi_sdi1_i        ( spi_din[1]          ) ,
-    .spi_sdi2_i        ( spi_din[2]          ) ,
-    .spi_sdi3_i        ( spi_din[3]          ) ,
-    .spi_sdo0_o        ( spi_dout[0]         ) ,
-    .spi_sdo1_o        ( spi_dout[1]         ) ,
-    .spi_sdo2_o        ( spi_dout[2]         ) ,
-    .spi_sdo3_o        ( spi_dout[3]         ) ,
+    .spi_clk_i         ( spi_clk            ) ,
+    .spi_cs_i          ( spi_cs             ) ,
+    .spi_mode_o        ( spi_mode           ) ,
+    .spi_sdi0_i        ( spi_din[0]         ) ,
+    .spi_sdi1_i        ( spi_din[1]         ) ,
+    .spi_sdi2_i        ( spi_din[2]         ) ,
+    .spi_sdi3_i        ( spi_din[3]         ) ,
+    .spi_sdo0_o        ( spi_dout[0]        ) ,
+    .spi_sdo1_o        ( spi_dout[1]        ) ,
+    .spi_sdo2_o        ( spi_dout[2]        ) ,
+    .spi_sdo3_o        ( spi_dout[3]        ) ,
 
-    .spi_master_clk_o  ( spi_master_clk      ) ,
-    .spi_master_csn0_o ( spi_master_cs_n[0]  ) ,
-    .spi_master_csn1_o ( spi_master_cs_n[1]  ) ,
-    .spi_master_csn2_o ( spi_master_cs_n[2]  ) ,
-    .spi_master_csn3_o ( spi_master_cs_n[3]  ) ,
-    .spi_master_mode_o ( spi_master_mode     ) ,
+    .spi_master_clk_o  ( spi_master_clk     ) ,
+    .spi_master_oen_o  ( spi_master_oen     ) ,
+    .spi_master_csn0_o ( spi_master_cs_n[0] ) ,
+    .spi_master_csn1_o ( spi_master_cs_n[1] ) ,
+    .spi_master_csn2_o ( spi_master_cs_n[2] ) ,
+    .spi_master_csn3_o ( spi_master_cs_n[3] ) ,
+    .spi_master_mode_o ( spi_master_mode    ) ,
     .spi_master_sdi0_i ( spi_master_din[0]  ) ,
     .spi_master_sdi1_i ( spi_master_din[1]  ) ,
     .spi_master_sdi2_i ( spi_master_din[2]  ) ,
@@ -148,23 +170,23 @@ pulpino u_pulpino (
     .spi_master_sdo2_o ( spi_master_dout[2] ) ,
     .spi_master_sdo3_o ( spi_master_dout[3] ) ,
 
-    .scl_i             ( scl_in              ) ,
-    .scl_o             ( scl_out             ) ,
-    .scl_oen_o         ( scl_oen             ) ,
-    .sda_i             ( sda_in              ) ,
-    .sda_o             ( sda_out             ) ,
-    .sda_oen_o         ( sda_oen             ) ,
+    .scl_i             ( scl_in             ) ,
+    .scl_o             ( scl_out            ) ,
+    .scl_oen_o         ( scl_oen            ) ,
+    .sda_i             ( sda_in             ) ,
+    .sda_o             ( sda_out            ) ,
+    .sda_oen_o         ( sda_oen            ) ,
 
-    .gpio_in           ( gpio_in             ) ,
-    .gpio_out          ( gpio_out            ) ,
-    .gpio_dir          ( gpio_dir            ) ,
+    .gpio_in           ( gpio_in            ) ,
+    .gpio_out          ( gpio_out           ) ,
+    .gpio_dir          ( gpio_dir           ) ,
 
-    .uart_tx           ( uart_tx_core        ) , // output
-    .uart_rx           ( uart_rx             ) , // input
-    .uart_rts          ( uart_rts            ) , // output
-    .uart_dtr          ( uart_dtr            ) , // output
-    .uart_cts          ( uart_cts            ) , // input
-    .uart_dsr          ( uart_dsr            )   // input
+    .uart_tx           ( uart_tx_core       ) , // output
+    .uart_rx           ( 1'b0               ) , // input
+    .uart_rts          ( uart_rts           ) , // output
+    .uart_dtr          ( uart_dtr           ) , // output
+    .uart_cts          ( uart_cts           ) , // input
+    .uart_dsr          ( uart_dsr           ) // input
 );
 
 endmodule
