@@ -128,7 +128,7 @@ inout Vpp_W_DQ2; //input Vpp_W, inout DQ2 (VPPH not implemented)
 
 
 //parameter [40*8:1] memory_file = "mem_Q016.vmf";
-parameter [40*8:1] memory_file = `FILENAME_mem;
+parameter [128*8:1] memory_file = `FILENAME_mem;
 
 // parameter [2048*8:1] fdp_file = "sfdp.vmf";
 parameter [48*8:1] fdp_file = `FILENAME_sfdp;
@@ -3703,7 +3703,7 @@ module Memory(mem_file);
     `include "include/DevParam.h"
 
 
-    input [40*8:1] mem_file;
+    input [128*8:1] mem_file;
 
     //-----------------------------
     // data structures definition
@@ -4338,7 +4338,7 @@ module UtilFunctions;
 
     task load_memory_file;
 
-    input [40*8:1] memory_file;
+    input [128*8:1] memory_file;
 
     begin
     

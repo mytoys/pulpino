@@ -59,7 +59,7 @@ arty_top u_DUT (
 );
 
 N25Qxxx #(
-    .memory_file ( "helloworld.vmf")
+    .memory_file ( "../../../../rtl/N25Q128A13E_VG12/sim/helloworld.vmf")
 ) u_N25Q128A13E (
     .S         ( qspi_cs_n    ) ,
     .C_        ( qspi_clk     ) ,

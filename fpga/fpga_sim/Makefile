@@ -1,28 +1,10 @@
 PROJECT:=arty_top
 
-all: synth
-
-synth:
-	vivado -mode batch -source tcl/run.tcl
-	cp arty_top.runs/impl_1/arty_top.bit arty_top.bit
-
-#impl:
-#	rm -rf .Xil
-#	vivado -mode batch -source tcl/impl.tcl
-#	cp arty_top.runs/impl_1/arty_top.bit .
-#	cp arty_top.runs/impl_1/*.dcp .
-
-gui:
+new:
 	vivado -mode gui -source tcl/run.tcl &
 
-#gui-impl:
-#	vivado -mode gui -source tcl/impl.tcl &
-
-continue:
+open:
 	vivado -mode gui arty_top.xpr &
-
-sim:
-	vivado -mode gui -source tcl/sim_behav.tcl &
 
 #clean-impl:
 #	rm -rf arty_top*
@@ -37,6 +19,7 @@ clean:
 	rm -rf ${PROJECT}.sdk
 	rm -rf ${PROJECT}.cache
 	rm -rf ${PROJECT}.ioplanning
+	rm -rf ${PROJECT}.ip_user_files
 	rm -rf ${PROJECT}.hwdef
 	rm -rf *.log
 	rm -rf ulpsoc.txt
