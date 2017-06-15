@@ -33,7 +33,7 @@ int main()
 {
   /* sets direction for SPI master pins with only one CS */
   spi_setup_master(1);
-  uart_set_cfg(0, 1);
+  uart_set_cfg(0, 26);
 
   for (int i = 0; i < 3000; i++) {
     //wait some time to have proper power up of external flash
