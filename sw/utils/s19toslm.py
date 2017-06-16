@@ -239,3 +239,65 @@ for i in tcdm_files:
 spi_stim.close()
 l2_stim.close()
 flash.close()
+
+###############################################################################
+# write flash bin files for FPGA only
+# 
+# 0x400000_dmem.bin
+#   header: dmem offset, addr, size, blocks
+#   dmem  : in bytes
+#
+# 0x401000_imem.bin
+#   imem  : in bytes
+#
+###############################################################################
+# To generate .mcs in Vivado :
+# 
+# write_cfgmem  \
+#  -format mcs \
+#  -size 16 \
+#  -interface SPIx4 \
+#  -loadbit  "up 0x00000000 /path/to/arty_top.bit " \
+#  -loaddata "up 0x00400000 /path/to/0x400000_dmem.bin  \
+#             up 0x00401000 /path/to/0x401000_imem.bin " \
+#  -force \
+#  -file "/path/to/arty_top.mcs"
+# 
+###############################################################################
+def dump_bytes_bin( filetoprint, addr, data_s):
+    for i in xrange(0,4,1):
+        #print data_s[i*2:(i+1)*2]
+        filetoprint.write(chr(int(data_s[i*2:(i+1)*2],16)))
+
+flash_start_addr = 0x400000
+flash_l2_off_s   = "%08X"%(flash_start_addr + (((tcdm_size+8)/1024 + 1)*1024 <<2))
+flash_tcdm_off_s = "%08X"%(flash_start_addr + header_size)
+
+dmem_bin= open("0x400000_dmem.bin", 'wb')
+imem_bin= open("0x401000_imem.bin", 'wb')
+
+dump_bytes_bin(dmem_bin, 0,  flash_l2_off_s)
+dump_bytes_bin(dmem_bin, 4,  l2_start_s)
+dump_bytes_bin(dmem_bin, 8,  l2_size_s)
+dump_bytes_bin(dmem_bin, 12, l2_blocks_s)
+dump_bytes_bin(dmem_bin, 16, flash_tcdm_off_s)
+dump_bytes_bin(dmem_bin, 20, tcdm_start_s)
+dump_bytes_bin(dmem_bin, 24, tcdm_size_s)
+dump_bytes_bin(dmem_bin, 28, tcdm_blocks_s)
+
+for addr in sorted(slm_dict.keys()):
+    data = slm_dict[addr]
+
+    # l2 address range
+    if(addr >= l2_start and addr <= l2_end):
+        l2_base = (addr - l2_start)
+        l2_addr = l2_base  + ((tcdm_size+8)/1024+1)*1024
+        dump_bytes_bin(imem_bin, l2_addr * 4, data)
+
+    # tcdm address range
+    if(addr >= tcdm_start and addr <= tcdm_end):
+        tcdm_addr = (addr - tcdm_start)
+        dump_bytes_bin(dmem_bin, tcdm_addr * 4 + header_size, data)
+
+dmem_bin.close()
+imem_bin.close()
