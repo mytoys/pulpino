@@ -56,6 +56,12 @@ arty_top/arty_top.bit:
 #sw:
 #	make -C sw all
 
+.PHONY: veryclean
+veryclean: clean
+	make -C fpga_sim clean
+	rm -f common/boot_code.asm
+	rm -f common/boot_code.cde
+	rm -f common/boot_code.sv
 
 .PHONY: clean
 clean:
