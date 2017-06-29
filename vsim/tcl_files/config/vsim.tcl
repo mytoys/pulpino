@@ -8,7 +8,8 @@ set cmd "vsim -quiet $TB \
   +nowarnTFMPC \
   +MEMLOAD=$MEMLOAD \
   -t ps \
-  -voptargs=\"+acc -suppress 2103\" \
+  -coverage \
+  -voptargs=\"+acc -suppress 2103 +cover=bcestf\" \
   $VSIM_FLAGS"
 
 eval $cmd
