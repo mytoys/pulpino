@@ -272,3 +272,23 @@ Take a look at the `sw/libs/Arduino_libs` subfolder for more information about t
 
 Take a look at the `sw/libs/Arduino_libs` subfolder for more information about
 the status of the currently supported libraries.
+
+
+## run asic synthesis 
+
+1. modify `syn/tcl/library_setup.tcl` with target library (std_cells and memory)
+2. modify `rtl/sp_ram_wrap.sv` with memory block instantiation
+3. modify `rtl/clk_rst_gen.sv` for FLL (umcL65_LL_FLL)
+4. `cd syn/work; make`
+
+
+please note that in 2017-08 update, some files has been renamed so `syn/tcl/read_design.tcl` need to be updated.
+
+Synthesis report (RI5CY, w/o FPU):
+
+- S55LL hs rvt, IMEM=DMEM=2x16384x32b : 0.17+4x0.34=1.53mm^2, 250MHz
+- HB180, w/o memory: 1.8mm^2, 120MHz
+ 
+	
+    
+
