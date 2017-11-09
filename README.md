@@ -286,8 +286,9 @@ please note that in 2017-08 update, some files has been renamed so `syn/tcl/read
 
 Synthesis report (RI5CY, w/o FPU):
 
-- S55LL hs rvt, IMEM=DMEM=2x16384x32b : 0.17+4x0.34=1.53mm^2, 250MHz
-- HB180, w/o memory: 1.8mm^2, 120MHz
+- S55LL hs rvt, IMEM=DMEM=2x16384x32b : 0.17+4x0.34=1.53mm^2, 250MHz(4ns)
+- T130G, w/o memory: 2.0mm^2, 217MHz(4.6ns)
+- HB180, w/o memory: 1.8mm^2, 119MHz(8.4ns)
  
 	
     
