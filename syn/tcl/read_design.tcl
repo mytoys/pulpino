@@ -66,28 +66,30 @@ set SRC_AXI_NODE " \
 set SRC_RISCV " \
     ${DIR_DESIGN}/ips/riscv/include/riscv_defines.sv \
     ${DIR_DESIGN}/ips/riscv/include/riscv_tracer_defines.sv \
-    ${DIR_DESIGN}/ips/riscv/alu.sv \
-    ${DIR_DESIGN}/ips/riscv/alu_div.sv \
-    ${DIR_DESIGN}/ips/riscv/compressed_decoder.sv \
-    ${DIR_DESIGN}/ips/riscv/controller.sv \
-    ${DIR_DESIGN}/ips/riscv/cs_registers.sv \
-    ${DIR_DESIGN}/ips/riscv/debug_unit.sv \
-    ${DIR_DESIGN}/ips/riscv/decoder.sv \
-    ${DIR_DESIGN}/ips/riscv/exc_controller.sv \
-    ${DIR_DESIGN}/ips/riscv/ex_stage.sv \
-    ${DIR_DESIGN}/ips/riscv/hwloop_controller.sv \
-    ${DIR_DESIGN}/ips/riscv/hwloop_regs.sv \
-    ${DIR_DESIGN}/ips/riscv/id_stage.sv \
-    ${DIR_DESIGN}/ips/riscv/if_stage.sv \
-    ${DIR_DESIGN}/ips/riscv/load_store_unit.sv \
-    ${DIR_DESIGN}/ips/riscv/mult.sv \
-    ${DIR_DESIGN}/ips/riscv/prefetch_buffer.sv \
-    ${DIR_DESIGN}/ips/riscv/prefetch_L0_buffer.sv \
+    ${DIR_DESIGN}/ips/riscv/include/apu_core_package.sv \
+    ${DIR_DESIGN}/ips/riscv/include/apu_macros.sv \
+    ${DIR_DESIGN}/ips/riscv/riscv_alu.sv \
+    ${DIR_DESIGN}/ips/riscv/riscv_alu_div.sv \
+    ${DIR_DESIGN}/ips/riscv/riscv_compressed_decoder.sv \
+    ${DIR_DESIGN}/ips/riscv/riscv_controller.sv \
+    ${DIR_DESIGN}/ips/riscv/riscv_cs_registers.sv \
+    ${DIR_DESIGN}/ips/riscv/riscv_debug_unit.sv \
+    ${DIR_DESIGN}/ips/riscv/riscv_decoder.sv \
+    ${DIR_DESIGN}/ips/riscv/riscv_int_controller.sv \
+    ${DIR_DESIGN}/ips/riscv/riscv_ex_stage.sv \
+    ${DIR_DESIGN}/ips/riscv/riscv_hwloop_controller.sv \
+    ${DIR_DESIGN}/ips/riscv/riscv_hwloop_regs.sv \
+    ${DIR_DESIGN}/ips/riscv/riscv_id_stage.sv \
+    ${DIR_DESIGN}/ips/riscv/riscv_if_stage.sv \
+    ${DIR_DESIGN}/ips/riscv/riscv_load_store_unit.sv \
+    ${DIR_DESIGN}/ips/riscv/riscv_mult.sv \
+    ${DIR_DESIGN}/ips/riscv/riscv_prefetch_buffer.sv \
+    ${DIR_DESIGN}/ips/riscv/riscv_prefetch_L0_buffer.sv \
     ${DIR_DESIGN}/ips/riscv/riscv_core.sv \
 "
 # riscv_regfile_fpga
 set SRC_RISCV_REGFILE_FPGA " \
-    ${DIR_DESIGN}/ips/riscv/register_file_ff.sv \
+    ${DIR_DESIGN}/ips/riscv/riscv_register_file_ff.sv \
 "
 
 # apb_pulpino
@@ -214,7 +216,7 @@ set SRC_AXI_SPI_MASTER " \
 
 # core2axi
 set SRC_CORE2AXI " \
-    ${DIR_DESIGN}/ips/axi/core2axi/rtl/core2axi.sv \
+    ${DIR_DESIGN}/ips/axi/core2axi/core2axi.sv \
 "
 
 # apb_node
@@ -256,7 +258,7 @@ set SRC_PULPINO " \
    ${DIR_DESIGN}/rtl/boot_rom_wrap.sv \
    ${DIR_DESIGN}/rtl/peripherals.sv \
    ${DIR_DESIGN}/rtl/ram_mux.sv \
-   ${DIR_DESIGN}/rtl/top.sv \
+   ${DIR_DESIGN}/rtl/pulpino_top.sv \
    ${DIR_DESIGN}/rtl/clk_rst_gen.sv \
    ${DIR_DESIGN}/fpga/rtl/pulpino_wrap.v \
 "

@@ -49,7 +49,7 @@ module clk_rst_gen
   // FLL
   //----------------------------------------------------------------------------//
 
-`ifdef ASIC
+`ifdef ASIC_UMC65
   umcL65_LL_FLL
   fll_i
   (
